@@ -1,0 +1,67 @@
+//애니메이션 시작할때
+.wow-enter {
+    opacity:0; 
+}
+//애니메이션 동작때
+.wow-enter-active{
+    opacity:1;
+    transition: all 500ms;
+}
+
+//sass문법 (1)
+$메인컬러:#ff0000;
+
+// .red {
+//     color:#ff0000;
+// }
+
+//sass문법 (2)
+div.container {
+    h4 {
+        color:black;
+    }
+    p {
+        color:black;
+    }
+}
+
+// div.container h4 {
+//     color:blue;
+// }
+
+// div.container p {
+//     color:green;
+// }
+
+.my-alert {
+    background:#eeeeee;
+    padding:20px;
+    border-radius:5px;
+    max-width:500px;
+    width:100%;
+    margin:30px auto 30px auto;
+}
+
+.my-alert p {
+    margin-bottom:0;
+}
+
+//sass문법 (3) 
+.my-alert2 {
+    @extend .my-alert;  //.my-alert의 스타일을 모두 복사 붙여넣기
+    background: #ffe590;
+}
+
+//sass문법 (4) //복사 붙여넣기 가능 @mixin @include
+@mixin 함수(){
+    background:#eeeeee;
+    padding:20px;
+    border-radius:5px;
+    max-width:500px;
+    width:100%;
+    margin:30px auto 30px auto;
+}
+
+.my-alert3 {
+    @include 함수()
+}
