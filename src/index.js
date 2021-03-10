@@ -29,8 +29,8 @@ function reducer2(state = alert초기값, 액션 ){
 
 
 let 초기값 = [
-  { id : 5, name : 'Baby shoes', quan : 1},
-  { id : 6, name : 'Red Herring', quan : 1}
+  { id : '5', name : 'Baby shoes', quan : 1},
+  { id : '6', name : 'Red Herring', quan : 1}
 ];
 
 
@@ -41,6 +41,8 @@ function reducer(state = 초기값, 액션){   //default parameter문법. 관습
     let found = copy.findIndex((a)=>{ return a.id === 액션.payload.id});
                         //배열을 돌려서 return에 있는 조건에 해당하는 index를
                         //found에 넣어줌 
+    console.log(copy);
+    console.log(액션.payload.id);
     if(found>=0){
       copy[found].quan++;
       return copy;
