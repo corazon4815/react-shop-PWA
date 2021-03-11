@@ -113,7 +113,7 @@ function App() {
         <재고context.Provider value={재고}>
           {/* <div>DETAIL</div> */}
             <Suspense fallback={<div>로딩중이에요</div>}>
-              <Detail shoes={shoes} 재고={재고} 재고변경={재고변경}/>
+              <Detail shoes={shoes} 재고={재고} 재고변경={재고변경} />
             </Suspense>
         </재고context.Provider>
       </Route>

@@ -10,7 +10,7 @@ import { combineReducers, createStore } from 'redux';
 
 //redux쓰기 
 //1. redux설치 후 index파일에 provider import
-//2. provider로 app 감싸기
+//2. provider로 app 감싸기 //이러면 다같이 props없이도 state를 공유함 
 //3. createStore안에 state저장
 //4. provider에 props전송
 //5. cart.js가서 state사용하기 ->export default 셋팅

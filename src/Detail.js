@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useParams } from 'react-router-dom';
-import { Navbar,Nav,NavDropdown,Button,Jumbotron} from 'react-bootstrap';
+import { Table,Nav} from 'react-bootstrap';
 //import styled from 'styled-conponents';
                     //css를 미리 입혀놓은 컴포넌트 근데 설치해도 없다고나와서 주석처리함
 import './Detail.scss';
@@ -30,14 +30,33 @@ function Detail(props){
     //종료되기전에 뭘 실행할지 적음 
   },[]);
   
-  let { id } = useParams(); //  /:id자리에 사용자가 입력한 값이 저장됨
+  
   let history = useHistory();
   let [alert, alert변경] = useState(true);
   let [inputData, inputData변경] = useState('');
   let 재고 = useContext(재고context); //범위를 App.js에 만들었기때문에 export하고 import해야함
   let [누른탭, 누른탭변경] = useState(0);
   let [스위치, 스위치변경] = useState(false);
+  let { id } = useParams(); //  /:id자리에 사용자가 입력한 값이 저장됨
 
+  let [watched, watched변경]= useState([]);
+
+  //최근 본상품으로 상품 저장
+  useEffect(()=>{
+    let arr = localStorage.getItem('watched'); //arr에 ""쳐진애(json) 또는 null이 나옴
+    console.log("첫번째"+arr); //첫번째["1","3"]
+    if( arr ==null ) {arr=[]} else {arr = JSON.parse(arr)}
+     //null이면 빈배열을 넣어주고 null이 아니면 따옴표를 없애줌
+    console.log("두번째"+arr); //두번째1,3
+    arr.push(id);
+    arr = [...new Set(arr)]; //중복 제거 
+    console.log("세번째"+arr); //세번째1,3
+    localStorage.setItem('watched',JSON.stringify(arr));
+    console.log(localStorage.getItem('watched')); // ["1","3"]
+    watched변경([...arr]);
+    console.log({watched});
+    
+  },[]);
 
     return (
       <div className="container">
@@ -55,10 +74,10 @@ function Detail(props){
         }
 
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-md-4">
             <img src={'https://codingapple1.github.io/shop/shoes'+(id)+'.jpg'} width="100%" />
           </div>
-          <div className="col-md-6 mt-4">
+          <div className="col-md-4 mt-4">
             <h4 className="pt-5">{props.shoes[id-1].title}</h4>
             <p>{props.shoes[id-1].content}</p>
             <p>{props.shoes[id-1].price}W</p>
@@ -78,6 +97,11 @@ function Detail(props){
             }}>뒤로가기</button>
 
           </div>
+          <div className="col-md-4">
+            <p width="100%" >최근 본 상품</p>
+            <Watched watched={watched} shoes={props.shoes}></Watched>    
+          </div>
+          
         </div>
 
         <Nav className="mt-5" variant="tabs" defaultActiveKey="link-0">
@@ -119,12 +143,41 @@ function Info(props){
   )
 }
 
+
+
 function state를props화(state){
   console.log(state)
   return {
     state : state.reducer, //stete안에 있는 모든 데이터를 state라는 이름의 props로 바꿔주세용
                            //이러면 state라고 쓰는 순간 안의 모든 데이터가 출력이 됨
     alert열렸니 : state.reducer2            }
+}
+
+function Watched(props){
+  return (
+      <div>
+        <Table responsive>
+          <thead>
+            <tr>
+                <th>이미지</th>
+                <td>상품명</td>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              props.watched.map((a, i)=>{
+                return (
+                  <tr key={i}>
+                    <td><img src={'https://codingapple1.github.io/shop/shoes'+(a)+'.jpg'} width="50px" /></td>
+                    <td>{a}</td>
+                  </tr>
+                        )
+                    })
+            }
+          </tbody>
+        </Table>
+      </div>
+  )
 }
 
 export default connect(state를props화)(Detail)
