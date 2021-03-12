@@ -3,18 +3,26 @@ import { Navbar,Nav,NavDropdown,Button,Jumbotron} from 'react-bootstrap';
 import './App.css';
 import Data from './data.js' //    ./ 가 현재 경로라는 뜻임 
 //import Detail from './Detail.js'
-
+import Detail from './Detail.js';
 import axios from 'axios';
 import { Link, Route, Switch, useHistory } from 'react-router-dom'
 import Cart from './Cart.js';
-let Detail = lazy(()=> import('./Detail.js')); //<Detail>을 보여줄때만 import Detail.js해옴. lazy는 import가장아래위치
+import { connect } from 'react-redux';
+
+
+
+//let Detail = lazy(()=> import('./Detail.js')); //<Detail>을 보여줄때만 import Detail.js해옴. lazy는 import가장아래위치
+
 export let 재고context = React.createContext();
 //let 재고context = React.createContext();
 
-function App() {
+function App(props) {
 
-  let [shoes, shoes변경] = useState(Data);
   let [alert, alert변경] = useState(false);
+  let [more, more변경] = useState(true)
+  let [shoes, shoes변경] = useState(Data);
+  // let [alert, alert변경] = useState(false);
+  // let [more, more변경] = useState(true);
   let [재고, 재고변경] = useState([10,11,12]);
 
 
@@ -72,8 +80,8 @@ function App() {
 
           <div className="row">
             {
-              shoes.map((a,i)=>{
-                return <Card shoes={shoes[i]} i={i} key={i}/>  //shoes[i]를 a로적어도 됨 
+              props.item.map((a,i)=>{
+                return <Card item={props.item[i]} i={i} key={i}/>  //shoes[i]를 a로적어도 됨 
                                                 //i를 자식에 전송하는법 1. i={i}
               })
             }
@@ -83,28 +91,12 @@ function App() {
 
           {/* then 성공했을때
           catch 실패했을때 */}
-          <button className="btn btn-primary" onClick={()=>{
-            alert변경(true);
-            //로딩중이라는 ui
-
-            //post 요청 
-            //axios.post('https://codingapple1.github.io/shop/data2.json', { id : 'test', pw : 1234})
-            //.then((result)=>{  })
-            //.catch(()=>{ })
-
-            axios.get('https://codingapple1.github.io/shop/data2.json') // object가 아닌 json형식임(키값에 ""가 있음) 
-            .then((result)=>{
-              alert변경(false);                                           //하지만 axios는 오브젝트로 변환시켜서 가져옴
-            //로딩중이라는 ui 안보이게 
-              console.log(result.data);                                  //쌩자바스크립트 fetch는 안그렇기때문에 작업이 필요함
-              shoes변경([...shoes, ...result.data]);
-            })
-            .catch(()=>{
-              alert변경(false);
-              //로딩중이라는 ui 안보이게 
-              console.log('실패 했어요')
-            })
-          }}>더보기</button>
+          {
+          more === true
+          ?
+          <More item={props.item} more변경={more변경} alert변경={alert변경} dispatch= {props.dispatch}/>
+          : null    
+        }
         </div>
       </Route>
       
@@ -113,7 +105,8 @@ function App() {
         <재고context.Provider value={재고}>
           {/* <div>DETAIL</div> */}
             <Suspense fallback={<div>로딩중이에요</div>}>
-              <Detail shoes={shoes} 재고={재고} 재고변경={재고변경} />
+              {/* <Detail 재고={재고} item={props.item} 재고변경={재고변경} /> */}
+            <Detail 재고변경={재고변경} />
             </Suspense>
         </재고context.Provider>
       </Route>
@@ -150,10 +143,10 @@ function Card(props){
   let history = useHistory();
   
   return (
-    <div className="col-md-4" onClick={()=>{ history.push('/detail/'+(props.shoes.id+1)) }}> {/**md : 모바일에선 새로로 정렬*/}
+    <div className="col-md-4" onClick={()=>{ history.push('/detail/'+(props.item.id+1)) }}> {/**md : 모바일에선 새로로 정렬*/}
         <img src={ 'https://codingapple1.github.io/shop/shoes'+(props.i+1)+'.jpg' } width="100%" />
-        <h4>{props.shoes.title}</h4>
-        <p>{props.shoes.content} & {props.shoes.price}</p>
+        <h4>{props.item.title}</h4>
+        <p>{props.item.content} & {props.item.price}</p>
         <Test></Test>
     </div>
     
@@ -168,10 +161,57 @@ function Modal(){
   )
 }
 
+function More(props){
+  return (
+    <button className="btn btn-primary" onClick={()=>{
+      props.alert변경(true);
+      //로딩중이라는 ui
+
+      //post 요청 
+      //axios.post('https://codingapple1.github.io/shop/data2.json', { id : 'test', pw : 1234})
+      //.then((result)=>{  })
+      //.catch(()=>{ })
+
+      axios.get('https://codingapple1.github.io/shop/data2.json') // object가 아닌 json형식임(키값에 ""가 있음) 
+      .then((result)=>{
+        props.alert변경(false);                                           //하지만 axios는 오브젝트로 변환시켜서 가져옴
+      //로딩중이라는 ui 안보이게 
+        console.log(result.data);                                  //쌩자바스크립트 fetch는 안그렇기때문에 작업이 필요함
+        props.dispatch({type : '신발추가', payload : result.data });
+        
+        //shoes변경([...shoes, ...result.data]);
+        props.more변경(false);
+      })
+      .catch((result)=>{
+        props.alert변경(false);
+        //로딩중이라는 ui 안보이게 
+        props.more변경(false);
+        console.log('실패 했어요')
+        console.log(result)
+      })
+    }}>더보기
+    </button>
+  )
+}
+
 function Test(){ //props없이 공유하기 =>useContext 
   let 재고 = useContext(재고context)
   return <p>{재고}</p>
 
 }
 
-export default App;
+function state를props화(state){
+  console.log(state)
+  return {
+    state : state.reducer, //stete안에 있는 모든 데이터를 state라는 이름의 props로 바꿔주세용
+                           //이러면 state라고 쓰는 순간 안의 모든 데이터가 출력이 됨
+    alert열렸니 : state.reducer2,
+    item : state.reducer3
+     }
+}
+
+
+
+export default connect(state를props화)(App)
+
+//export default App;

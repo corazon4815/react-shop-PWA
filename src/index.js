@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { combineReducers, createStore } from 'redux'; 
+import Data from './data.js'
 
 //redux쓰기 
 //1. redux설치 후 index파일에 provider import
@@ -17,6 +18,18 @@ import { combineReducers, createStore } from 'redux';
 //6. 쓰는곳에서 props로 받기 
 
 let alert초기값 = true;
+
+let shoes초기값 = Data;
+
+function reducer3(state = shoes초기값, 액션){
+  if(액션.type === '신발추가') {
+    let copy = [...state];
+    return [...copy, ...액션.payload]
+  }
+
+  return state;
+}
+
 
 function reducer2(state = alert초기값, 액션 ){
   if (액션.type === '닫기'){
@@ -82,7 +95,7 @@ function reducer(state = 초기값, 액션){   //default parameter문법. 관습
   }
 }
 
-let store = createStore(combineReducers({reducer, reducer2}));
+let store = createStore(combineReducers({reducer, reducer2, reducer3}));
 
 
 //</HashRouter> -> 라우팅을 안전하게 할수있게 도와줌(서버에 전송되지않고 페이지가 바뀜)

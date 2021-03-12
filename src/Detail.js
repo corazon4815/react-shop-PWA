@@ -78,9 +78,9 @@ function Detail(props){
             <img src={'https://codingapple1.github.io/shop/shoes'+(id)+'.jpg'} width="100%" />
           </div>
           <div className="col-md-4 mt-4">
-            <h4 className="pt-5">{props.shoes[id-1].title}</h4>
-            <p>{props.shoes[id-1].content}</p>
-            <p>{props.shoes[id-1].price}W</p>
+            <h4 className="pt-5">{props.item[id-1].title}</h4>
+            <p>{props.item[id-1].content}</p>
+            <p>{props.item[id-1].price}</p>
             
             {/* <Info 재고={props.재고}/>  */}
             {/* 자식의 자식에게 props전송하는법 */}
@@ -88,7 +88,7 @@ function Detail(props){
             <button className="btn btn-secondary" onClick={()=>{
               //주문클릭시 재고 빼기
               props.재고변경([9,10,11])
-              props.dispatch({type : '항목추가', payload : {id: id, name : props.shoes[id-1].title , quan:1}});
+              props.dispatch({type : '항목추가', payload : {id: id, name : props.item[id-1].title , quan:1}});
               history.push('/cart')
 
             }}>주문하기</button>&nbsp;&nbsp;&nbsp;
@@ -98,8 +98,8 @@ function Detail(props){
 
           </div>
           <div className="col-md-4">
-            <p width="100%" >최근 본 상품</p>
-            <Watched watched={watched} shoes={props.shoes}></Watched>    
+            <p width="100%"><b>최근 본 상품</b></p>
+            <Watched watched={watched} item={props.item}></Watched>    
           </div>
           
         </div>
@@ -143,16 +143,6 @@ function Info(props){
   )
 }
 
-
-
-function state를props화(state){
-  console.log(state)
-  return {
-    state : state.reducer, //stete안에 있는 모든 데이터를 state라는 이름의 props로 바꿔주세용
-                           //이러면 state라고 쓰는 순간 안의 모든 데이터가 출력이 됨
-    alert열렸니 : state.reducer2            }
-}
-
 function Watched(props){
   return (
       <div>
@@ -167,18 +157,30 @@ function Watched(props){
             {
               props.watched.map((a, i)=>{
                 return (
-                  <tr key={i}>
+                  <tr>
                     <td><img src={'https://codingapple1.github.io/shop/shoes'+(a)+'.jpg'} width="50px" /></td>
-                    <td>{a}</td>
+                    <td>{props.item[a-1].title}</td>
                   </tr>
-                        )
-                    })
+               )
+             })
             }
           </tbody>
         </Table>
       </div>
   )
 }
+
+function state를props화(state){
+  console.log(state)
+  return {
+    state : state.reducer, //stete안에 있는 모든 데이터를 state라는 이름의 props로 바꿔주세용
+                           //이러면 state라고 쓰는 순간 안의 모든 데이터가 출력이 됨
+    alert열렸니 : state.reducer2,
+    item : state.reducer3
+     }
+}
+
+
 
 export default connect(state를props화)(Detail)
 
