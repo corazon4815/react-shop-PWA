@@ -48,10 +48,26 @@ function Detail(props){
     if( arr ==null ) {arr=[]} else {arr = JSON.parse(arr)}
      //null이면 빈배열을 넣어주고 null이 아니면 따옴표를 없애줌
     console.log("두번째"+arr); //두번째1,3
-    arr.push(id);
-    arr = [...new Set(arr)]; //중복 제거 
+    
+    let isDuple = false;
+    if (arr != null) {
+      arr.map((item, idx) => {
+        if (item.id === id) {
+          isDuple = true;
+        }
+      }); 
+    }
+    if (!isDuple) {
+      arr.push({
+        id : id,
+        title : props.item[id-1].title 
+      });
+      localStorage.setItem('watched',JSON.stringify(arr));
+    }
+    
+    //arr = [...new Set(arr)]; //중복 제거 
     console.log("세번째"+arr); //세번째1,3
-    localStorage.setItem('watched',JSON.stringify(arr));
+    
     console.log(localStorage.getItem('watched')); // ["1","3"]
     watched변경([...arr]);
     console.log({watched});
@@ -155,11 +171,11 @@ function Watched(props){
           </thead>
           <tbody>
             {
-              props.watched.map((a, i)=>{
+              props.watched.map((item, i)=>{
                 return (
                   <tr>
-                    <td><img src={'https://codingapple1.github.io/shop/shoes'+(a)+'.jpg'} width="50px" /></td>
-                    <td>{props.item[a-1].title}</td>
+                    <td><img src={'https://codingapple1.github.io/shop/shoes'+(item.id)+'.jpg'} width="50px" /></td>
+                    <td>{item.title}</td>
                   </tr>
                )
              })

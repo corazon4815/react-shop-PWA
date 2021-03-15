@@ -1,4 +1,4 @@
-import React, {useContext, useState, lazy, Suspense} from 'react';
+import React, {useContext, useState, lazy, useEffect, Suspense} from 'react';
 import { Navbar,Nav,NavDropdown,Button,Jumbotron} from 'react-bootstrap';
 import './App.css';
 import Data from './data.js' //    ./ 가 현재 경로라는 뜻임 
@@ -24,6 +24,8 @@ function App(props) {
   // let [alert, alert변경] = useState(false);
   // let [more, more변경] = useState(true);
   let [재고, 재고변경] = useState([10,11,12]);
+
+
 
 
   return (
@@ -121,10 +123,10 @@ function App(props) {
         <Cart></Cart>
       </Route>
 
-      {/* <Route path="/:id">  */}
+      <Route path="/:ifgdg"> 
       {/* /:id ->모든문자열을 뜻함 */}
-        {/* <div>/슬러시뒤에 문자열이 있으면 이거보여줘</div>
-      </Route> */}
+      <div>/슬러시뒤에 문자열이 있으면 이거보여줘</div>
+      </Route> 
 
     </Switch>        
       
@@ -138,6 +140,8 @@ function App(props) {
 
 // component제작법 1. funtion컴포넌트이름(){} 2.return(<div></div)
 function Card(props){
+
+
   let 재고 = useContext(재고context);
                         //범위를 넣어줌
   let history = useHistory();
@@ -162,6 +166,7 @@ function Modal(){
 }
 
 function More(props){
+
   return (
     <button className="btn btn-primary" onClick={()=>{
       props.alert변경(true);
@@ -213,5 +218,6 @@ function state를props화(state){
 
 
 export default connect(state를props화)(App)
+
 
 //export default App;
