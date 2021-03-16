@@ -6,13 +6,17 @@ import { Table,Nav} from 'react-bootstrap';
 import './Detail.scss';
 import {재고context} from './App.js';
 import {CSSTransition} from "react-transition-group";
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 
 //  let 박스 = styled.div`
 //    padding : 20px;
 //  `;
 
 function Detail(props){
+
+  
+  const item = useSelector((store) => store.reducer3);
+  console.log(item);
 
   //1. componentDidMount() : 컴포넌트 첫 등장후 실행할 코드 
   //2. componentWillUnmount() : 다른페이지로 넘어간다든지 등의 사유로 컴포넌트가 사라지기 전 실행할 코드
@@ -51,8 +55,8 @@ function Detail(props){
     
     let isDuple = false;
     if (arr != null) {
-      arr.map((item, idx) => {
-        if (item.id === id) {
+      arr.map((a, idx) => {
+        if (a.id === id) {
           isDuple = true;
         }
       }); 
@@ -60,7 +64,7 @@ function Detail(props){
     if (!isDuple) {
       arr.push({
         id : id,
-        title : props.item[id-1].title 
+        title : item[id-1].title 
       });
       localStorage.setItem('watched',JSON.stringify(arr));
     }
@@ -94,9 +98,9 @@ function Detail(props){
             <img src={'https://codingapple1.github.io/shop/shoes'+(id)+'.jpg'} width="100%" />
           </div>
           <div className="col-md-4 mt-4">
-            <h4 className="pt-5">{props.item[id-1].title}</h4>
-            <p>{props.item[id-1].content}</p>
-            <p>{props.item[id-1].price}</p>
+            <h4 className="pt-5">{item[id-1].title}</h4>
+            <p>{item[id-1].content}</p>
+            <p>{item[id-1].price}</p>
             
             {/* <Info 재고={props.재고}/>  */}
             {/* 자식의 자식에게 props전송하는법 */}
@@ -104,7 +108,7 @@ function Detail(props){
             <button className="btn btn-secondary" onClick={()=>{
               //주문클릭시 재고 빼기
               props.재고변경([9,10,11])
-              props.dispatch({type : '항목추가', payload : {id: id, name : props.item[id-1].title , quan:1}});
+              props.dispatch({type : '항목추가', payload : {id: id, name : item[id-1].title , quan:1}});
               history.push('/cart')
 
             }}>주문하기</button>&nbsp;&nbsp;&nbsp;
@@ -115,7 +119,7 @@ function Detail(props){
           </div>
           <div className="col-md-4">
             <p width="100%"><b>최근 본 상품</b></p>
-            <Watched watched={watched} item={props.item}></Watched>    
+            <Watched watched={watched} item={item}></Watched>    
           </div>
           
         </div>
@@ -171,11 +175,11 @@ function Watched(props){
           </thead>
           <tbody>
             {
-              props.watched.map((item, i)=>{
+              props.watched.map((a, i)=>{
                 return (
                   <tr>
-                    <td><img src={'https://codingapple1.github.io/shop/shoes'+(item.id)+'.jpg'} width="50px" /></td>
-                    <td>{item.title}</td>
+                    <td><img src={'https://codingapple1.github.io/shop/shoes'+(a.id)+'.jpg'} width="50px" /></td>
+                    <td>{a.title}</td>
                   </tr>
                )
              })
@@ -186,19 +190,19 @@ function Watched(props){
   )
 }
 
-function state를props화(state){
-  console.log(state)
-  return {
-    state : state.reducer, //stete안에 있는 모든 데이터를 state라는 이름의 props로 바꿔주세용
-                           //이러면 state라고 쓰는 순간 안의 모든 데이터가 출력이 됨
-    alert열렸니 : state.reducer2,
-    item : state.reducer3
-     }
-}
+// function state를props화(state){
+//   console.log(state)
+//   return {
+//     state : state.reducer, //stete안에 있는 모든 데이터를 state라는 이름의 props로 바꿔주세용
+//                            //이러면 state라고 쓰는 순간 안의 모든 데이터가 출력이 됨
+//     alert열렸니 : state.reducer2,
+//     item : state.reducer3
+//      }
+// }
 
 
 
-export default connect(state를props화)(Detail)
+// export default connect(state를props화)(Detail)
 
 
-//export default Detail;
+export default Detail;
