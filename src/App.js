@@ -8,6 +8,7 @@ import axios from 'axios';
 import { Link, Route, Switch, useHistory } from 'react-router-dom'
 import Cart from './Cart.js';
 import { connect } from 'react-redux';
+import { Input } from '@progress/kendo-react-inputs';
 
 
 
@@ -61,6 +62,15 @@ function App(props) {
               This is a simple hero unit, a simple jumbotron-style component for calling
               extra attention to featured content or information.
             </p>
+            <Input
+                                            name="password"
+                                            type="password"
+                                            style={{ width: '100%' }}
+                                            label="Password"
+                                            required={true}
+                                            minLength={6}
+                                            maxLength={18}
+                                        />
             <p>
               <Button variant="light">Learn more</Button>
             </p>
